@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import User
+from apps.users.models import User
 
 # Create your models here.
 class TransactionType(models.Model):
