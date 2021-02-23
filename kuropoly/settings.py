@@ -41,9 +41,9 @@ INSTALLED_APPS = [
 
     #Local apps
     'rest_framework',
-    'users',
-    'room',
-    'transaction',
+    'apps.users',
+    'apps.room',
+    'apps.transaction',
 ]
 
 MIDDLEWARE = [
