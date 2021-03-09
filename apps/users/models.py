@@ -25,26 +25,21 @@ class User(AbstractUser):
      blank=True, null=True,
      related_name='id_user_type')
     room = models.ForeignKey(Room, on_delete=models.CASCADE, blank=True, null=True)
-    name = models.CharField(max_length=15, unique=True)
+    username = models.CharField(max_length=15, unique=True, default=None)
     amount = models.IntegerField()
     avatar = models.ImageField(upload_to='pictures/', default='pictures/default.jpg')
-    first_name = None
-    last_name = None
-    email = None
-    last_login = None 
-    is_staff = None
-    is_superuser = None
-    USERNAME_FIELD = 'name' 
     STATUS = ( 
         ('A','Active'),
         ('I','Inactive'),
     )
     status = models.CharField(max_length=1,choices=STATUS, default='A')
+    first_name = None
+    last_name = None
+    last_login = None
+    date_joined = None 
+    
     def __str__(self):
         return self.name
 
     class Meta: 
         db_table = "User"
-
-
-

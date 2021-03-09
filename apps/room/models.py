@@ -1,13 +1,16 @@
 from django.db import models
-import shortuuid 
 from datetime import datetime
 
 # Create your models here.
 class Room(models.Model):
     """Modelo de la sala"""
-    su = shortuuid.ShortUUID().random(length=8)
-    idRoom = models.CharField(max_length=10, default=su, primary_key=True)
+    idRoom = models.CharField(max_length=10, primary_key=True)
     time = models.DateTimeField(default=datetime.now)
+    limit = models.IntegerField(default='5')
+    userBanker = models.ForeignKey("users.User", 
+    on_delete=models.CASCADE,
+    related_name='id_banker',
+    blank=True, null=True)
     STATUS =( 
         ('A','Active'),
         ('I','Inactive'),

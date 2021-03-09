@@ -3,7 +3,7 @@ from apps.room.views import RoomViewSet
 from django.urls import path, include
 
 router = DefaultRouter()
-router.register('rooms', RoomViewSet)
+router.register(r'rooms', RoomViewSet, basename='room')
 
 urlpatterns = [
     path('',include(router.urls)),
