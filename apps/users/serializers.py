@@ -16,7 +16,6 @@ class UserRoomSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'username',
-            'amount',
             'avatar'
         ]
 

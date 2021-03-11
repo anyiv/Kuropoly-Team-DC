@@ -6,7 +6,7 @@ class Room(models.Model):
     """Modelo de la sala"""
     idRoom = models.CharField(max_length=10, primary_key=True)
     time = models.DateTimeField(default=datetime.now)
-    limit = models.IntegerField(default='5')
+    limit = models.IntegerField(default='0')
     userBanker = models.ForeignKey("users.User", 
     on_delete=models.CASCADE,
     related_name='id_banker',

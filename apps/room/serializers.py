@@ -9,16 +9,21 @@ class RoomSerializer(serializers.ModelSerializer):
     userBanker = UserRoomSerializer()
     class Meta:
         model = Room
-        fields = ['userBanker',
-        'status',]
+        fields = [
+            'userBanker',
+            'status',
+            ]
 
     def create(self, validated_data):
         users_data = validated_data.pop('userBanker')
         su = shortuuid.ShortUUID().random(length=8)
         ut = UserType.objects.get(idUserType="1")
         user = User.objects.create(userType = ut,
+        amount=100000,
          **users_data)
         room = Room.objects.create(idRoom=su,
          userBanker = user,
           **validated_data)
+        room.limit = 1
+        room.save()
         return room
