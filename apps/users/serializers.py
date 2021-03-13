@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
             'avatar'
         ]
 
+
 class UserRoomSerializer(serializers.ModelSerializer):
     """User room serializer"""
     class Meta:
@@ -18,6 +19,7 @@ class UserRoomSerializer(serializers.ModelSerializer):
             'username',
             'avatar'
         ]
+
 
 class UserTypeSerializer(serializers.ModelSerializer):
     """User Type serializer"""

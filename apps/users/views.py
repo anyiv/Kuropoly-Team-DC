@@ -4,6 +4,7 @@ from apps.users.models import User, UserType
 from apps.room.models import Room
 from apps.users.serializers import UserSerializer, UserTypeSerializer
 import shortuuid
+from rest_framework.authtoken.models import Token
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -14,10 +15,14 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        #user = self.get_object()
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        token, created = Token.objects.get_or_create(user=serializer.instance)
+        data={
+            'access_token':token.key,
+            'user': serializer.data
+        }
+        return Response(data, status=status.HTTP_201_CREATED, headers=headers)
 
     def perform_create(self, serializer):
         user = serializer.save()
@@ -29,6 +34,18 @@ class UserViewSet(viewsets.ModelViewSet):
         user.amount = "1000"
         user.save()
         return user
+
+    def list(self, request):
+        # user = request.user
+        # if user.userType == "2":
+        #     self.queryset = User.objects.all().filter(status='A')
+        #     self.context['amounts'] = User.objects.all().filter(status='A').values('amount')
+            
+        #     serializer = UserSerializer(self.queryset, many=True)
+        # else:
+        self.queryset = User.objects.all().filter(status='A').exclude(userType='1')
+        serializer = UserSerializer(self.queryset, many=True)
+        return Response(serializer.data)
 
 
 
