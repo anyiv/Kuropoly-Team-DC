@@ -5,12 +5,15 @@ from apps.room.models import Room
 from apps.users.serializers import UserSerializer, UserTypeSerializer
 import shortuuid
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import IsAuthenticated
+import math 
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     """User Viewset"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
         serializer = UserSerializer(data=request.data)
@@ -36,16 +39,35 @@ class UserViewSet(viewsets.ModelViewSet):
         return user
 
     def list(self, request):
-        # user = request.user
-        # if user.userType == "2":
-        #     self.queryset = User.objects.all().filter(status='A')
-        #     self.context['amounts'] = User.objects.all().filter(status='A').values('amount')
-            
-        #     serializer = UserSerializer(self.queryset, many=True)
-        # else:
-        self.queryset = User.objects.all().filter(status='A').exclude(userType='1')
-        serializer = UserSerializer(self.queryset, many=True)
-        return Response(serializer.data)
+        name = request.user
+        user = User.objects.get(username=name)
+        print(name,user.userType, user.room, user.id)
+        if user.userType.name == 'Banquero' and user.room==None:
+            roomBanker = Room.objects.get(userBanker=user.id)
+            self.queryset = User.objects.all().filter(status='A',room=roomBanker).exclude(userType='Banquero')
+            serializer = UserSerializer(self.queryset, many=True)
+            data={
+                'users':serializer.data
+            }
+            print(serializer.data)
+        else:
+            self.queryset = User.objects.all().filter(status='A',room=user.room).order_by('id')
+            list_amounts = User.objects.all().filter(status='A',room=user.room).values_list('amount',flat=True).order_by('id')
+
+            def round_down(x):
+                return int(math.floor(x / 100.0)) * 100
+
+            new_amounts=[]
+            for list in list_amounts:
+                a = round_down(list)
+                new_amounts.append(a)       
+            serializer = UserSerializer(self.queryset, many=True)
+            data={
+                'users': serializer.data,
+                'round_amounts': new_amounts
+            }
+            print(serializer.data)
+        return Response(data)
 
 
 
