@@ -26,9 +26,7 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         idr = serializer.validated_data['room']
-        print(idr)
-        room = Room.objects.all().get(idRoom=idr)
-        print(room.limit)
+        room = Room.objects.get(idRoom=idr)
         if room.limit < 5:
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
@@ -60,7 +58,6 @@ class UserViewSet(viewsets.ModelViewSet):
         Banquero: se muestran los montos exactos de los jugadores
         Jugadores: se muestran los montos aproximados de los jugadores"""
         self.permission_classes = [permissions.IsAuthenticated, ]
-        
         name = request.user
         user = User.objects.get(username=name)
         print(name,user.userType, user.room, user.id)
@@ -94,8 +91,15 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(data)
         
 
-    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
-    def solicitarBancarrota(self, request, pk):
+    @action(methods=['patch'], detail=True, permission_classes=[IsAuthenticated])
+    def solicitarBancarrota(self, request, pk=None):
+        """Un jugador solicita bancarrota y transfiere 
+        todo su dinero al jugador que lo provocó """
+        name = request.user
+        user = User.objects.get(username=name)
+        user.status = 'I'
+        user.save()
+        #falta la transaccion
         return 0
 
 
@@ -104,6 +108,7 @@ class UserTypeViewSet(viewsets.ModelViewSet):
     """ User Type viewset"""
     queryset = UserType.objects.all()
     serializer_class = UserTypeSerializer
+    permission_classes = [permissions.AllowAny, ]
             
 
 

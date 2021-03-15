@@ -22,10 +22,11 @@ class RoomSerializer(serializers.ModelSerializer):
         ut = UserType.objects.get(idUserType="1")
         user = User.objects.create(userType = ut,
             amount=100000,
+            is_staff=True,
             **users_data)
         room = Room.objects.create(idRoom=su,
             userBanker = user,
             **validated_data)
         room.limit = 1
         room.save()
-        return su, room
+        return room

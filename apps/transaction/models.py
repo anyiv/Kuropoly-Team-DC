@@ -1,6 +1,7 @@
 from django.db import models
 from apps.users.models import User
 from datetime import datetime
+from django.contrib import admin
 
 # Create your models here.
 class TransactionType(models.Model):
@@ -22,15 +23,14 @@ class TransactionType(models.Model):
 
 class Transaction(models.Model):
     """Modelo de Transaccion"""
-    idTransaction = models.CharField(max_length=15, primary_key=True)
     TnType = models.ForeignKey(TransactionType, on_delete=models.CASCADE,
         blank=True, null=True,
         related_name='id_tn_type')
     userReceiver = models.ForeignKey(User,on_delete=models.CASCADE,
-        related_name='user_receiver')
+        related_name='user_receiver', blank=True, null=True)
     userTransmitter = models.ForeignKey(User,on_delete=models.CASCADE, 
-        related_name='user_transmitter')
-    amount = models.IntegerField()
+        related_name='user_transmitter', blank=True, null=True)
+    amount = models.IntegerField(blank=True, null=True)
     creationTime = models.DateTimeField(default=datetime.now)
     concept = models.CharField(max_length=80, blank=True, null=True)
     STATUS = ( 
@@ -40,7 +40,10 @@ class Transaction(models.Model):
     status = models.CharField(max_length=1,choices=STATUS, default='A')
 
     def __str__(self):
-        return self.idTransaction + ' / ' + self.userReceiver + ' / ' + self.userTransmitter
+        return self.id
 
     class Meta: 
         db_table = "Transaction"
+
+class TransactionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'userReceiver', 'userTransmitter', 'amount' )
