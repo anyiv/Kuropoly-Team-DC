@@ -42,27 +42,21 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
         return transaction
 
-    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated]) #recordar cambiar a IsAdminUser
+    @action(methods=['post'], detail=True, permission_classes=[IsAdminUser]) 
     def cobrar(self, request, pk=None):
-        """ Método que permite al banquero cobrar a un usuario  """
+        """ Método que permite al banquero cobrar a un usuario.  
+        Nota: solo el usuario banquero tiene acceso a este método."""
         banquero = self.request.user
         serializer = TransactionSerializer(data=request.data)
         if serializer.is_valid(): 
             transaction = serializer.save(userReceiver=banquero)
             jugador = serializer.validated_data['userTransmitter']
             amount = serializer.validated_data['amount']
-            print(banquero.amount)
-            print(jugador.amount)
 
             banquero.amount += amount
             jugador.amount -= amount
             banquero.save()
             jugador.save()
-
-            print(serializer.data)
-            print(amount)
-            print(banquero.amount)
-            print(jugador.amount)
 
             return Response(transaction, status=status.HTTP_201_CREATED)
         else:
@@ -71,7 +65,8 @@ class TransactionViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=True, permission_classes=[IsAdminUser])
     def pass_go(self, request, pk=None):
-        """ Método que permite al banquero dar pass go ($200) automáticamente a un usuario"""
+        """ Método que permite al banquero dar pass go ($200) automáticamente a un usuario
+        Nota: solo el usuario banquero tiene acceso a este método."""
         banquero = self.request.user
         serializer = TransactionSerializer(data=request.data)
         if serializer.is_valid():

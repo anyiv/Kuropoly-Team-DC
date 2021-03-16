@@ -16,9 +16,11 @@ class RoomViewSet(viewsets.ModelViewSet):
     """Room viewset"""
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-    permission_classes = [permissions.AllowAny, ]
+    permission_classes = [permissions.IsAuthenticated, ]
 
     def create(self, request, *args, **kwargs):
+        """ Crea la sala y el usuario banquero.
+        Devuelve el código de la sala y el token del usuario. """
         self.permission_classes = [permissions.AllowAny, ]
         serializer = RoomSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -34,3 +36,14 @@ class RoomViewSet(viewsets.ModelViewSet):
             'access_token':token.key
         }
         return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def destroy(self, request, *args, **kwargs):
+        """Después del resumen de partida, se eliminan los datos de la DB """
+        instance = self.get_object()
+        banquero = instance.userBanker
+        self.perform_destroy(instance)
+        banquero.delete()
+        mensaje={
+            'info':'Datos eliminados.'
+        }
+        return Response(mensaje, status=status.HTTP_204_NO_CONTENT) 

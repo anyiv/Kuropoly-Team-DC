@@ -22,6 +22,8 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.AllowAny, ]
 
     def create(self, request, *args, **kwargs):
+        """Crea un usuario jugador que solicita entrar en una sala.
+        Devuelve el token y los datos del usuario."""
         self.permission_classes = [permissions.AllowAny, ]
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
