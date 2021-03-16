@@ -10,17 +10,17 @@ from apps.users.serializers import UserSerializer, UserTypeSerializer
 from apps.transaction.serializers import TransactionSerializer
 import shortuuid
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 import math 
-from rest_framework.decorators import action
+from rest_framework.decorators import action, permission_classes
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     """User Viewset"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [permissions.AllowAny, ]
 
-    
     def create(self, request, *args, **kwargs):
         self.permission_classes = [permissions.AllowAny, ]
         serializer = UserSerializer(data=request.data)
@@ -35,6 +35,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 'access_token':token.key,
                 'user': serializer.data
             }
+            print(request.META)
             return Response(data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             mensaje={
@@ -89,21 +90,30 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(data)
         
 
-    @action(methods=['patch'], detail=True, permission_classes=[IsAuthenticated])
-    def solicitarBancarrota(self, request, pk=None):
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated])
+    def solicitar_bancarrota(self, request, pk=None):
         """Un jugador solicita bancarrota y transfiere 
         todo su dinero al jugador que lo provocó """
-        user1 = self.request.user
+        user1 = self.request.user #usuario que envía
         user1.status = 'I'
         user1.save()
-        
         serializer = TransactionSerializer(data=request.data)
-        # if serializer.is_valid():
+        if serializer.is_valid():
+            transaction = serializer.save(userTransmitter=user1, amount=user1.amount)
+            amount = user1.amount
+            user2 = transaction.userReceiver
 
-        # else:
-        # return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
-        return 0
+            user1.amount = 0
+            user2.amount +=amount
 
+            user1.save()
+            user2.save()
+            mensaje={
+                'info':'La transacción se ha realizado con éxito.'
+            }
+            return Response(mensaje, status=status.HTTP_200_OK)
+        else:
+            return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserTypeViewSet(viewsets.ModelViewSet):
