@@ -4,11 +4,12 @@ from rest_framework import  (
     permissions
 )
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from apps.room.models import Room
 from apps.users.models import User
 from apps.room.serializers import RoomSerializer
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
 
 # Create your views here.
 class RoomViewSet(viewsets.ModelViewSet):

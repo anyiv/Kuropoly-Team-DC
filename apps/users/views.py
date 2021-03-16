@@ -12,7 +12,7 @@ import shortuuid
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny
 import math 
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -62,7 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user = self.request.user
         if user.userType.name == 'Banquero' and user.room==None:
             roomBanker = Room.objects.get(userBanker=user.id)
-            self.queryset = User.objects.all().filter(status='A',room=roomBanker).exclude(userType='Banquero')
+            self.queryset = User.objects.all().filter(status='A',room=roomBanker).exclude(userType='Banquero').order_by('id')
             list_amounts = User.objects.all().filter(status='A',room=roomBanker).values_list('amount',flat=True).order_by('id')
             serializer = UserSerializer(self.queryset, many=True)
             data={
@@ -114,6 +114,31 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(mensaje, status=status.HTTP_200_OK)
         else:
             return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['get'], detail=False, permission_classes=[IsAuthenticated])
+    def resumen_partida(self, request):
+        """ Muestra una lista de los jugadores con los saldos finales de cada uno"""
+        user = self.request.user
+        if user.userType.name == 'Banquero' and user.room==None:
+            roomBanker = Room.objects.get(userBanker=user.id)
+            self.queryset = User.objects.all().filter(room=roomBanker).exclude(userType='Banquero').order_by('id')
+            list_amounts = User.objects.all().filter(room=roomBanker).values_list('amount',flat=True).order_by('id')
+            serializer = UserSerializer(self.queryset, many=True)
+            data={
+                'users':serializer.data,
+                'amounts':list_amounts,
+                'info': 'Partida finalizada.'
+            }
+        else:
+            self.queryset = User.objects.all().filter(room=user.room).order_by('id')
+            list_amounts = User.objects.all().filter(room=user.room).values_list('amount',flat=True).order_by('id')
+            serializer = UserSerializer(self.queryset, many=True)
+            data={
+                'users':serializer.data,
+                'amounts':list_amounts,
+                'info': 'Partida finalizada.'
+            }
+        return Response(data, status=status.HTTP_200_OK)
 
 
 class UserTypeViewSet(viewsets.ModelViewSet):
