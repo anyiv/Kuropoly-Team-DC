@@ -7,6 +7,7 @@ from rest_framework import (
 from apps.users.models import User, UserType 
 from apps.room.models import Room
 from apps.users.serializers import UserSerializer, UserTypeSerializer
+from apps.transaction.serializers import TransactionSerializer
 import shortuuid
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
@@ -18,7 +19,6 @@ class UserViewSet(viewsets.ModelViewSet):
     """User Viewset"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny, ]
 
     
     def create(self, request, *args, **kwargs):
@@ -58,9 +58,7 @@ class UserViewSet(viewsets.ModelViewSet):
         Banquero: se muestran los montos exactos de los jugadores
         Jugadores: se muestran los montos aproximados de los jugadores"""
         self.permission_classes = [permissions.IsAuthenticated, ]
-        name = request.user
-        user = User.objects.get(username=name)
-        print(name,user.userType, user.room, user.id)
+        user = self.request.user
         if user.userType.name == 'Banquero' and user.room==None:
             roomBanker = Room.objects.get(userBanker=user.id)
             self.queryset = User.objects.all().filter(status='A',room=roomBanker).exclude(userType='Banquero')
@@ -95,11 +93,15 @@ class UserViewSet(viewsets.ModelViewSet):
     def solicitarBancarrota(self, request, pk=None):
         """Un jugador solicita bancarrota y transfiere 
         todo su dinero al jugador que lo provocó """
-        name = request.user
-        user = User.objects.get(username=name)
-        user.status = 'I'
-        user.save()
-        #falta la transaccion
+        user1 = self.request.user
+        user1.status = 'I'
+        user1.save()
+        
+        serializer = TransactionSerializer(data=request.data)
+        # if serializer.is_valid():
+
+        # else:
+        # return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
         return 0
 
 

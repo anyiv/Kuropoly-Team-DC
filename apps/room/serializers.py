@@ -30,3 +30,13 @@ class RoomSerializer(serializers.ModelSerializer):
         room.limit = 1
         room.save()
         return room
+
+class RoomLSerializer(serializers.ModelSerializer):
+    """ Room Serializer para la lista"""
+    class Meta:
+        model = Room
+        fields = [
+            'idRoom',
+            'userBanker',
+            'status',
+        ]
