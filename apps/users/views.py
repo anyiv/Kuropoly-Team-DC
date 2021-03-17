@@ -77,7 +77,7 @@ class UserViewSet(viewsets.ModelViewSet):
         Banquero: se muestran los montos exactos de los jugadores
         Jugadores: se muestran los montos aproximados de los jugadores"""
         user = self.request.user
-        if user.userType.name == 'Banquero' and user.room==None:
+        if user.userType.name == 'Banquero':
             roomBanker = Room.objects.get(userBanker=user.id)
             self.queryset = User.objects.all().filter(status='A',room=roomBanker).exclude(userType='Banquero').order_by('id')
             list_amounts = User.objects.all().filter(status='A',room=roomBanker).values_list('amount',flat=True).order_by('id')
@@ -118,7 +118,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             transaction = serializer.save(userTransmitter=user1, amount=user1.amount)
             amount = user1.amount
-            user2 = transaction.userReceiver
+            user2 = transaction.userReceiver #usuario que recibe
 
             user1.amount = 0
             user2.amount +=amount

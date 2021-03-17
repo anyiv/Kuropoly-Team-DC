@@ -8,6 +8,7 @@ from apps.transaction.models import Transaction, TransactionType
 from apps.transaction.serializers import TransactionSerializer, TransactionTypeSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from apps.users.models import User
+from apps.room.models import Room
 from rest_framework.decorators import action
 
 # Create your views here.
@@ -72,7 +73,16 @@ class TransactionViewSet(viewsets.ModelViewSet):
             return Response(transaction, status=status.HTTP_201_CREATED)
         else:
             return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
-    
+
+    def list(self, request):
+        """ Lista todas las transacciones que han hecho los usuarios de la sala"""
+        banquero = self.request.user
+        room = Room.objects.get(userBanker=banquero.id)
+        self.queryset = Transaction.objects.filter(userTransmitter__room__idRoom__exact=room.idRoom)
+        serializer = TransactionSerializer(self.queryset, many=True)
+        return Response(serializer.data)
+
+
 
     @action(methods=['post'], detail=True, permission_classes=[IsAdminUser])
     def pass_go(self, request, pk=None):
@@ -90,7 +100,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
         else:
             return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
         
-
 class TransactionTypeViewSet(viewsets.ModelViewSet):
     """ Transaction ViewSet"""
     queryset = TransactionType.objects.all()
