@@ -51,9 +51,7 @@ class RoomViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         """Después del resumen de partida, se eliminan los datos de la DB """
         instance = self.get_object()
-        banquero = instance.userBanker
         self.perform_destroy(instance)
-        banquero.delete()
         mensaje={
             'info':'Datos eliminados.'
         }

@@ -78,7 +78,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
         """ Lista todas las transacciones que han hecho los usuarios de la sala"""
         banquero = self.request.user
         room = Room.objects.get(userBanker=banquero.id)
-        self.queryset = Transaction.objects.filter(userTransmitter__room__idRoom__exact=room.idRoom)
+        self.queryset = Transaction.objects.filter(userTransmitter__room__idRoom__exact=room.idRoom).order_by('-creationTime')
         serializer = TransactionSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
