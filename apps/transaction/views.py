@@ -15,11 +15,22 @@ class TransactionViewSet(viewsets.ModelViewSet):
     """ Transaction ViewSet"""
     queryset = Transaction.objects.all()
     serializer_class = TransactionSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
+    
+    permission_classes_by_action = {
+        'create': [IsAuthenticated], 
+        'list': [IsAdminUser],
+        }
+
+    def get_permissions(self):
+        try:
+            # return permission_classes depending on `action` 
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError: 
+            # action is not set return default permission_classes
+            return [permission() for permission in self.permission_classes]
 
     def create(self, request, *args, **kwargs):
         """Crea una transaccion donde un usuario envía dinero a otro usuario"""
-        self.permission_classes = [permissions.IsAuthenticated,]
         serializer = TransactionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

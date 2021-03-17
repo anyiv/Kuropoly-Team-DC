@@ -20,6 +20,17 @@ class UserRoomSerializer(serializers.ModelSerializer):
             'avatar'
         ]
 
+class UserListSerializer(serializers.ModelSerializer):
+    """ User List serializer"""
+
+    class Meta:
+        model = User
+        fields = [
+            'id',
+            'room',
+            'username',
+            'avatar'
+        ]
 
 class UserTypeSerializer(serializers.ModelSerializer):
     """User Type serializer"""

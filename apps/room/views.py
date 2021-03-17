@@ -9,19 +9,30 @@ from apps.room.models import Room
 from apps.users.models import User
 from apps.room.serializers import RoomSerializer
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import action
 
 # Create your views here.
 class RoomViewSet(viewsets.ModelViewSet):
     """Room viewset"""
     queryset = Room.objects.all()
     serializer_class = RoomSerializer
-    permission_classes = [permissions.IsAuthenticated, ]
+
+    permission_classes_by_action = {
+        'create': [AllowAny], 
+        'list': [IsAuthenticated],
+        'destroy': [IsAuthenticated],
+        }
+
+    def get_permissions(self):
+        try:
+            # return permission_classes depending on `action` 
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError: 
+            # action is not set return default permission_classes
+            return [permission() for permission in self.permission_classes]
 
     def create(self, request, *args, **kwargs):
         """ Crea la sala y el usuario banquero.
         Devuelve el código de la sala y el token del usuario. """
-        self.permission_classes = [permissions.AllowAny, ]
         serializer = RoomSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

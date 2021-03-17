@@ -6,7 +6,11 @@ from rest_framework import (
 )
 from apps.users.models import User, UserType 
 from apps.room.models import Room
-from apps.users.serializers import UserSerializer, UserTypeSerializer
+from apps.users.serializers import (
+    UserSerializer, 
+    UserTypeSerializer, 
+    UserListSerializer
+)
 from apps.transaction.serializers import TransactionSerializer
 import shortuuid
 from rest_framework.authtoken.models import Token
@@ -19,7 +23,19 @@ class UserViewSet(viewsets.ModelViewSet):
     """User Viewset"""
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [permissions.AllowAny, ]
+
+    permission_classes_by_action = {
+        'create': [AllowAny], 
+        'list': [IsAuthenticated],
+        }
+
+    def get_permissions(self):
+        try:
+            # return permission_classes depending on `action` 
+            return [permission() for permission in self.permission_classes_by_action[self.action]]
+        except KeyError: 
+            # action is not set return default permission_classes
+            return [permission() for permission in self.permission_classes]
 
     def create(self, request, *args, **kwargs):
         """Crea un usuario jugador que solicita entrar en una sala.
@@ -60,13 +76,12 @@ class UserViewSet(viewsets.ModelViewSet):
         """Lista los usuarios según el tipo de usuario:
         Banquero: se muestran los montos exactos de los jugadores
         Jugadores: se muestran los montos aproximados de los jugadores"""
-        self.permission_classes = [permissions.IsAuthenticated, ]
         user = self.request.user
         if user.userType.name == 'Banquero' and user.room==None:
             roomBanker = Room.objects.get(userBanker=user.id)
             self.queryset = User.objects.all().filter(status='A',room=roomBanker).exclude(userType='Banquero').order_by('id')
             list_amounts = User.objects.all().filter(status='A',room=roomBanker).values_list('amount',flat=True).order_by('id')
-            serializer = UserSerializer(self.queryset, many=True)
+            serializer = UserListSerializer(self.queryset, many=True)
             data={
                 'users':serializer.data,
                 'amounts':list_amounts
@@ -83,7 +98,7 @@ class UserViewSet(viewsets.ModelViewSet):
             for list in list_amounts:
                 a = round_down(list)
                 new_amounts.append(a)       
-            serializer = UserSerializer(self.queryset, many=True)
+            serializer = UserListSerializer(self.queryset, many=True)
             data={
                 'users': serializer.data,
                 'round_amounts': new_amounts
