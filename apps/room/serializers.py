@@ -28,6 +28,8 @@ class RoomSerializer(serializers.ModelSerializer):
             userBanker = user,
             **validated_data)
         room.limit = 1
+        user.room=room
+        user.save()
         room.save()
         return room
 
