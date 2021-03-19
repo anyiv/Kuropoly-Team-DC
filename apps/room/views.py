@@ -34,19 +34,21 @@ class RoomViewSet(viewsets.ModelViewSet):
         """ Crea la sala y el usuario banquero.
         Devuelve el código de la sala y el token del usuario. """
         serializer = RoomSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        name = list(serializer.data['userBanker'].items())[0][1]
-        banquero = User.objects.get(username=name)
-        room = serializer.instance
-        idroom = room.idRoom
-        token, created = Token.objects.get_or_create(user=banquero)
-        data={
-            'idroom':idroom,
-            'access_token':token.key
-        }
-        return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            name = list(serializer.data['userBanker'].items())[0][1]
+            banquero = User.objects.get(username=name)
+            room = serializer.instance
+            idroom = room.idRoom
+            token, created = Token.objects.get_or_create(user=banquero)
+            data={
+                'idroom':idroom,
+                'access_token':token.key
+            }
+            return Response(data, status=status.HTTP_201_CREATED, headers=headers)
+        else:
+            return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
 
     def destroy(self, request, *args, **kwargs):
         """Después del resumen de partida, se eliminan los datos de la DB """

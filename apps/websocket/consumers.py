@@ -29,13 +29,6 @@ class KuropolyConsumer(AsyncJsonWebsocketConsumer):
         response = json.loads(text_data)
         event = response.get("event", None)
         message = response.get("message", None)
-        if event == 'MOVE':
-            # Send message to room group
-            await self.channel_layer.group_send(self.room_group_name, {
-                'type': 'send_message',
-                'message': message,
-                "event": "MOVE"
-            })
             
         if event == 'START':
             # Send message to room group

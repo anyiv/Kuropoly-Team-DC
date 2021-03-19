@@ -87,8 +87,8 @@ class UserViewSet(viewsets.ModelViewSet):
             }
             #print(serializer.data)
         else:
-            self.queryset = User.objects.all().filter(status='A',room=user.room).exclude(id=user.id,userType='Banquero').order_by('id')
-            list_amounts = User.objects.all().filter(status='A',room=user.room).exclude(id=user.id,userType='Banquero').values_list('amount',flat=True).order_by('id')
+            self.queryset = User.objects.all().filter(status='A',room=user.room).exclude(id=user.id).exclude(userType__name='Banquero').order_by('id')
+            list_amounts = User.objects.all().filter(status='A',room=user.room).exclude(id=user.id).exclude(userType__name='Banquero').values_list('amount',flat=True).order_by('id')
 
             def round_down(x):
                 return int(math.floor(x / 100.0)) * 100
