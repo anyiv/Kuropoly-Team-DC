@@ -52,6 +52,17 @@ class KuropolyConsumer(AsyncJsonWebsocketConsumer):
                 'message': message,
                 'event': "END"
             })
+        
+        if event == 'TRAN':
+            #Send message to users 
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                'type': 'send_message',
+                'message': message,
+                'event': "TRAN"
+                }
+            )
 
     async def send_message(self, res):
         """ Receive message from room group """
@@ -59,3 +70,17 @@ class KuropolyConsumer(AsyncJsonWebsocketConsumer):
         await self.send(text_data=json.dumps({
             "payload": res,
         }))
+
+    # async def chat_message(self, event):
+    #     """
+    #     Called when someone has messaged our chat.
+    #     """
+    #     # Send a message down to the client
+    #     await self.send_json(
+    #         {
+    #             "msg_type": settings.MSG_TYPE_MESSAGE,
+    #             "room": event["idRoom"],
+    #             "username": event["username"],
+    #             "message": event["message"],
+    #         },
+    #     )
