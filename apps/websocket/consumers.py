@@ -55,12 +55,18 @@ class KuropolyConsumer(AsyncJsonWebsocketConsumer):
         
         if event == 'TRAN':
             #Send message to users 
+            transaction = response.get("transaction", None)
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                 'type': 'send_message',
                 'message': message,
-                'event': "TRAN"
+                'event': "TRAN",
+                'transaction': {
+                        'from': transaction['user_from'],
+                        'to': transaction['to'],
+                        'amount': transaction['amount']
+                    }
                 }
             )
 

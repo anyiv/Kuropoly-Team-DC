@@ -21,7 +21,7 @@ class RoomSerializer(serializers.ModelSerializer):
         su = shortuuid.ShortUUID().random(length=8)
         ut = UserType.objects.get(idUserType="1")
         user = User.objects.create(userType = ut,
-            amount=100000,
+            amount=500000,
             is_staff=True,
             **users_data)
         room = Room.objects.create(idRoom=su,
