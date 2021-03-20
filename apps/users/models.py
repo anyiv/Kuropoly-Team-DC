@@ -31,7 +31,7 @@ class User(AbstractUser):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, blank=True, null=True)
     username = models.CharField(max_length=15, unique=True, default=None)
     amount = models.IntegerField(blank=True,null=True)
-    avatar = models.ImageField(upload_to='media/pictures/', default='media/pictures/default.jpg')
+    avatar = models.CharField(max_length=10,blank=True,null=True)
     STATUS = ( 
         ('A','Active'),
         ('I','Inactive'),

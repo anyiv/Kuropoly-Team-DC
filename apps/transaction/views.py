@@ -72,7 +72,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
             banquero.save()
             jugador.save()
 
-            return Response(transaction, status=status.HTTP_201_CREATED)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response({"errors": (serializer.errors,)}, status=status.HTTP_400_BAD_REQUEST)
 

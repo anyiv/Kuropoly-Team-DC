@@ -53,7 +53,6 @@ class UserViewSet(viewsets.ModelViewSet):
                 'access_token':token.key,
                 'user': serializer.data
             }
-            print(request.META)
             return Response(data, status=status.HTTP_201_CREATED, headers=headers)
         else:
             mensaje={
@@ -145,6 +144,33 @@ class UserViewSet(viewsets.ModelViewSet):
             'info': 'Partida finalizada.'
         }
         return Response(data, status=status.HTTP_200_OK)
+
+    @action(methods=['patch'], detail=True, permission_classes=[IsAuthenticated])
+    def avatar(self, request, pk=None):
+        user = self.request.user
+        data = request.data
+        list_avatar = User.objects.all().filter(room= user.room).values_list('avatar',flat=True)
+        print(list_avatar)
+        print(user.avatar)
+        var = False
+        for avatar in list_avatar:
+            print(avatar)
+            if data['avatar'] == avatar:
+                var = True
+        
+        if var:
+            mensaje={
+                'info': 'El avatar ya está en uso.'
+            }
+            return Response(mensaje, status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            new_avatar = data['avatar']
+            user.avatar = new_avatar
+            user.save()
+            mensaje={
+                'info':'El avatar ha sido creado'
+            }
+            return Response(mensaje, status=status.HTTP_200_OK)
 
 
 class UserTypeViewSet(viewsets.ModelViewSet):
