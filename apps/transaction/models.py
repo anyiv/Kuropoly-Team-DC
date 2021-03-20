@@ -23,13 +23,14 @@ class TransactionType(models.Model):
 
 class Transaction(models.Model):
     """Modelo de Transaccion"""
+    id = models.CharField(max_length=8, primary_key = True)
     TnType = models.ForeignKey(TransactionType, on_delete=models.CASCADE,
         blank=True, null=True,
-        related_name='id_tn_type', unique = True)
+        related_name='id_tn_type')
     userReceiver = models.ForeignKey(User,on_delete=models.CASCADE,
-        related_name='user_receiver', blank=True, null=True, unique = True)
+        related_name='user_receiver', blank=True, null=True)
     userTransmitter = models.ForeignKey(User,on_delete=models.CASCADE, 
-        related_name='user_transmitter', blank=True, null=True, unique = True)
+        related_name='user_transmitter', blank=True, null=True)
     amount = models.IntegerField(blank=True, null=True)
     creationTime = models.DateTimeField(default=datetime.now)
     concept = models.CharField(max_length=80, blank=True, null=True)
