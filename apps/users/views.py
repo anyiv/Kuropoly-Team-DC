@@ -86,20 +86,21 @@ class UserViewSet(viewsets.ModelViewSet):
             }
             #print(serializer.data)
         else:
-            self.queryset = User.objects.all().filter(status='A',room=user.room).exclude(userType__name='Banquero').order_by('id')
-            list_amounts = User.objects.all().filter(status='A',room=user.room).exclude(userType__name='Banquero').values_list('amount',flat=True).order_by('id')
+            self.queryset = User.objects.all().filter(status='A',room=user.room).exclude(userType__name='Banquero').exclude(id=user.id).order_by('id')
+            list_amounts = User.objects.all().filter(status='A',room=user.room).exclude(userType__name='Banquero').exclude(id=user.id).values_list('amount',flat=True).order_by('id')
 
-            def round_down(x):
-                return int(math.floor(x / 100.0)) * 100
+            # def round_down(x):
+            #     return int(math.floor(x / 100.0)) * 100
 
-            new_amounts=[]
-            for list in list_amounts:
-                a = round_down(list)
-                new_amounts.append(a)       
+            # new_amounts=[]
+            # for list in list_amounts:
+            #     a = round_down(list)
+                # new_amounts.append(a)       
             serializer = UserListSerializer(self.queryset, many=True)
             data={
                 'users': serializer.data,
-                'round_amounts': new_amounts
+                'round_amounts': list_amounts,
+                'my_amount': user.amount
             }
             #print(serializer.data)
         return Response(data)
