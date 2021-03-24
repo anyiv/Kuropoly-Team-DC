@@ -120,6 +120,17 @@ DATABASES = {
     }
 }
 '''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbmld85mrns1ae',
+        'HOST': 'ec2-54-146-73-98.compute-1.amazonaws.com',
+        'PORT': 5432,
+        'USER': 'kxwssckfqzvnzq',
+        'PASSWORD': '2058dc01389d2b136568c90fc14d45e950096d5c2222e3b2254b68b845edd349',
+        
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
