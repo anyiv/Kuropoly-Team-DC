@@ -18,7 +18,7 @@ class RoomSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Crea la sala y el banquero de la sala"""
         users_data = validated_data.pop('userBanker')
-        su = shortuuid.ShortUUID().random(length=8)
+        su = shortuuid.ShortUUID().random(length=8) #cambiar a 6
         ut = UserType.objects.get(idUserType="1")
         user = User.objects.create(userType = ut,
             amount=500000,

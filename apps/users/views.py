@@ -83,8 +83,7 @@ class UserViewSet(viewsets.ModelViewSet):
             data={
                 'users':serializer.data,
                 'amounts':list_amounts
-            }
-            #print(serializer.data)
+            }       
         else:
             self.queryset = User.objects.all().filter(status='A',room=user.room).exclude(userType__name='Banquero').exclude(id=user.id).order_by('id')
             list_amounts = User.objects.all().filter(status='A',room=user.room).exclude(userType__name='Banquero').exclude(id=user.id).values_list('amount',flat=True).order_by('id')
@@ -102,7 +101,6 @@ class UserViewSet(viewsets.ModelViewSet):
                 'round_amounts': list_amounts,
                 'my_amount': user.amount
             }
-            #print(serializer.data)
         return Response(data)
         
 
