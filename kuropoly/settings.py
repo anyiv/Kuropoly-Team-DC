@@ -120,7 +120,7 @@ DATABASES = {
     }
 }
 '''
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -131,6 +131,7 @@ DATABASES = {
         'PASSWORD': '2ef6c1e630e042cbfa9c9c022e3e7112127e371a6e533de7b45d67081e1d61db',
     }
 }
+'''
 
 
 # Password validation
@@ -199,7 +200,6 @@ AUTH_USER_MODEL = 'users.user'
 import django_heroku
 django_heroku.settings(locals())
 
-'''
+
 import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-'''
