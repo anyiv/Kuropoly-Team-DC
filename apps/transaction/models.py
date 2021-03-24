@@ -32,7 +32,7 @@ class Transaction(models.Model):
     userTransmitter = models.ForeignKey(User,on_delete=models.CASCADE, 
         related_name='user_transmitter', blank=True, null=True)
     amount = models.IntegerField(blank=True, null=True)
-    creationTime = models.DateTimeField(default=datetime.now)
+    creationTime = models.DateTimeField()
     concept = models.CharField(max_length=80, blank=True, null=True)
     STATUS = ( 
         ('A','Active'),
