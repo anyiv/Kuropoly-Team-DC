@@ -11,3 +11,5 @@ channels-redis
 django-cors-headers
 gunicorn
 django-heroku
+psycopg2-binary
+dj-database-url
