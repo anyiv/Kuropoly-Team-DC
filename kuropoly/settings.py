@@ -87,8 +87,8 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'kuropoly.wsgi.application'
 # Channels
 # ASGI_APPLICATION = "kuropoly.asgi.application"
-WSGI_APPLICATION = 'project.wsgi.application'
-ASGI_APPLICATION = "project.routing.application"
+WSGI_APPLICATION = 'kuropoly.wsgi.application'
+ASGI_APPLICATION = "kuropoly.routing.application"
 
 CHANNEL_LAYERS = {
     'default': {
