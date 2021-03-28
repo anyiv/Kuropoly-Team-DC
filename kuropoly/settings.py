@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.room',
     'apps.transaction',
+    'apps.websocket',
 
     #rest_framerwork
     'rest_framework.authtoken',
