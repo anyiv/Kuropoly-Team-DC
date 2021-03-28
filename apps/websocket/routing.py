@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.conf.urls import re_path
 
 from apps.websocket.consumers import KuropolyConsumer
 
 websocket_urlpatterns = [
-    url(r'^ws/play/(?P<idRoom>\w+)/$', KuropolyConsumer.as_asgi()),
+    re_path(r'^ws/play/(?P<idRoom>\w+)/$', KuropolyConsumer.as_asgi()),
 ]
