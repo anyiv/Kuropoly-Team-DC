@@ -88,7 +88,7 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'kuropoly.wsgi.application'
 # Channels
 ASGI_APPLICATION = "kuropoly.asgi.application"
-'''
+
 CHANNEL_LAYERS = {
     'default': {
         ## Method 1: Via redis lab
@@ -110,17 +110,17 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
-'''
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
+'''
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
+'''
 '''
 DATABASES = {
     'default': {
