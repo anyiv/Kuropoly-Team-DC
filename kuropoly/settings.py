@@ -85,9 +85,18 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'kuropoly.wsgi.application'
+# WSGI_APPLICATION = 'kuropoly.wsgi.application'
 # Channels
 ASGI_APPLICATION = "kuropoly.asgi.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+    },
+}
+'''
 CHANNEL_LAYERS = {
     'default': {
         ## Method 1: Via redis lab
@@ -109,7 +118,7 @@ CHANNEL_LAYERS = {
         "BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
-
+'''
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
@@ -200,8 +209,6 @@ AUTH_USER_MODEL = 'users.user'
 import django_heroku
 django_heroku.settings(locals())
 
-'''
+
 import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-test
-'''
