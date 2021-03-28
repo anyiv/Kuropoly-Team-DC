@@ -88,14 +88,6 @@ TEMPLATES = [
 # WSGI_APPLICATION = 'kuropoly.wsgi.application'
 # Channels
 ASGI_APPLICATION = "kuropoly.asgi.application"
-CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        },
-    },
-}
 '''
 CHANNEL_LAYERS = {
     'default': {
