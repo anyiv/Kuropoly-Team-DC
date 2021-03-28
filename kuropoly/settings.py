@@ -26,8 +26,6 @@ SECRET_KEY = '362!lluyj+1o$6j+4z3-ny0dn@9u64!f)wiz8id-t#6ft1wd*2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -87,7 +85,9 @@ TEMPLATES = [
 
 # WSGI_APPLICATION = 'kuropoly.wsgi.application'
 # Channels
-ASGI_APPLICATION = "kuropoly.asgi.application"
+# ASGI_APPLICATION = "kuropoly.asgi.application"
+WSGI_APPLICATION = 'project.wsgi.application'
+ASGI_APPLICATION = "project.routing.application"
 
 CHANNEL_LAYERS = {
     'default': {
