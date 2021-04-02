@@ -105,12 +105,12 @@ CHANNEL_LAYERS = {
 CHANNEL_LAYERS = {
     'default': {
         ## Method 1: Via redis lab
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #     "hosts": [
-        #       'redis://h:le16Dn6dYwGHOZLF9vWxySxmQSIwE4Zz@redis-12573.c99.us-east-1-4.ec2.cloud.redislabs.com:12573' 
-        #     ],
-        # }
+         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+         'CONFIG': {
+             "hosts": [
+               'redis://h:le16Dn6dYwGHOZLF9vWxySxmQSIwE4Zz@redis-12573.c99.us-east-1-4.ec2.cloud.redislabs.com:12573' 
+             ],
+         }
         
         ## Method 2: Via local redis
         # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -120,7 +120,7 @@ CHANNEL_LAYERS = {
         
         ## Method 3: Via In-memory channel layer
         
-        "BACKEND": "channels.layers.InMemoryChannelLayer"
+        #"BACKEND": "channels.layers.InMemoryChannelLayer"
     },
 }
 
