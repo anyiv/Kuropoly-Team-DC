@@ -45,7 +45,35 @@ class KuropolyConsumer(AsyncJsonWebsocketConsumer):
                 'message': message,
                 'event': "END"
             })
-        
+
+        if event == 'COBRAR':
+            # Send message to room group
+            transaction = response.get("transaction", None)
+            await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'send_message',
+                'message': message,
+                'event': "COBRAR",
+                'transaction': {
+                        'from': transaction['user_from'],
+                        'to': transaction['to'],
+                        'amount': transaction['amount']
+                    }
+        })
+
+        if event == 'PASS_GO':
+            # Send message to room group
+            transaction = response.get("transaction", None)
+            await self.channel_layer.group_send(self.room_group_name, {
+                'type': 'send_message',
+                'message': message,
+                'event': "PASS_GO",
+                'transaction': {
+                        'from': transaction['user_from'],
+                        'to': transaction['to'],
+                        'amount': transaction['amount']
+                    }
+        })
+
         if event == 'TRAN':
             #Send message to users 
             transaction = response.get("transaction", None)
