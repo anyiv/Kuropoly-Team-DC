@@ -94,7 +94,6 @@ class TransactionViewSet(viewsets.ModelViewSet):
         serializer = TransactionSerializer(data=request.data)
         if serializer.is_valid():
             transaction = serializer.save(userTransmitter=banquero, amount=200)
-            print(serializer.data)
             jugador = serializer.validated_data['userReceiver']
             jugador.amount += 200
             jugador.save()
