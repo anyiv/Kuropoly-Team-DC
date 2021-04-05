@@ -126,31 +126,12 @@ CHANNEL_LAYERS = {
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-<<<<<<< HEAD
-=======
-
->>>>>>> 01b0bb192378ec7de4eede29c70a3d51368844d2
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-<<<<<<< HEAD
-
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'dbmld85mrns1ae',
-#         'HOST': 'ec2-54-146-73-98.compute-1.amazonaws.com',
-#         'PORT': 5432,
-#         'USER': 'kxwssckfqzvnzq',
-#         'PASSWORD': '2058dc01389d2b136568c90fc14d45e950096d5c2222e3b2254b68b845edd349',
-        
-#     }
-# }
-=======
 '''
 DATABASES = {
     'default': {
@@ -164,7 +145,6 @@ DATABASES = {
 }
 '''
 
->>>>>>> 01b0bb192378ec7de4eede29c70a3d51368844d2
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -233,11 +213,6 @@ AUTH_USER_MODEL = 'users.user'
 import django_heroku
 django_heroku.settings(locals())
 
-<<<<<<< HEAD
-# import dj_database_url
-# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
-=======
 import dj_database_url
 DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
 '''
->>>>>>> 01b0bb192378ec7de4eede29c70a3d51368844d2
