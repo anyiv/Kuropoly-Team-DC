@@ -26,8 +26,6 @@ SECRET_KEY = '362!lluyj+1o$6j+4z3-ny0dn@9u64!f)wiz8id-t#6ft1wd*2'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -50,6 +48,7 @@ INSTALLED_APPS = [
     'apps.users',
     'apps.room',
     'apps.transaction',
+    'apps.websocket',
 
     #rest_framerwork
     'rest_framework.authtoken',
@@ -85,18 +84,33 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'kuropoly.wsgi.application'
+# WSGI_APPLICATION = 'kuropoly.wsgi.application'
 # Channels
+# ASGI_APPLICATION = "kuropoly.asgi.application"
+WSGI_APPLICATION = 'kuropoly.wsgi.application'
 ASGI_APPLICATION = "kuropoly.asgi.application"
+
+'''
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        },
+    },
+}
+'''
+
+
 CHANNEL_LAYERS = {
     'default': {
         ## Method 1: Via redis lab
-        # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        # 'CONFIG': {
-        #     "hosts": [
-        #       'redis://h:le16Dn6dYwGHOZLF9vWxySxmQSIwE4Zz@redis-12573.c99.us-east-1-4.ec2.cloud.redislabs.com:12573' 
-        #     ],
-        # }
+        #  'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        #  'CONFIG': {
+        #      "hosts": [
+        #        'redis://h:le16Dn6dYwGHOZLF9vWxySxmQSIwE4Zz@redis-12573.c99.us-east-1-4.ec2.cloud.redislabs.com:12573' 
+        #      ],
+        #  }
         
         ## Method 2: Via local redis
         # 'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -112,12 +126,17 @@ CHANNEL_LAYERS = {
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+<<<<<<< HEAD
+=======
+
+>>>>>>> 01b0bb192378ec7de4eede29c70a3d51368844d2
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+<<<<<<< HEAD
 
 
 # DATABASES = {
@@ -131,6 +150,21 @@ DATABASES = {
         
 #     }
 # }
+=======
+'''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'd51pbt2bi2s2n0',
+        'HOST': 'ec2-54-161-239-198.compute-1.amazonaws.com',
+        'PORT': 5432,
+        'USER': 'biypkvyivcnbcm',
+        'PASSWORD': '2ef6c1e630e042cbfa9c9c022e3e7112127e371a6e533de7b45d67081e1d61db',
+    }
+}
+'''
+
+>>>>>>> 01b0bb192378ec7de4eede29c70a3d51368844d2
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -194,9 +228,16 @@ MEDIA_URL = '/media/'
 
 AUTH_USER_MODEL = 'users.user'
 
+'''
 # Activate Django-Heroku.
 import django_heroku
 django_heroku.settings(locals())
 
+<<<<<<< HEAD
 # import dj_database_url
 # DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+=======
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+'''
+>>>>>>> 01b0bb192378ec7de4eede29c70a3d51368844d2

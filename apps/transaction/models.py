@@ -23,7 +23,10 @@ class TransactionType(models.Model):
 
 class Transaction(models.Model):
     """Modelo de Transaccion"""
+<<<<<<< HEAD
     #id = models.CharField(max_length=8, primary_key = True)
+=======
+>>>>>>> 01b0bb192378ec7de4eede29c70a3d51368844d2
     TnType = models.ForeignKey(TransactionType, on_delete=models.CASCADE,
         blank=True, null=True,
         related_name='id_tn_type')
