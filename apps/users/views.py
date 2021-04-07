@@ -134,10 +134,16 @@ class UserViewSet(viewsets.ModelViewSet):
     def resumen_partida(self, request):
         """ Muestra una lista de los jugadores con los saldos finales de cada uno"""
         user = self.request.user
-        self.queryset = User.objects.all().filter(room=user.room).exclude(userType__name='Banquero').order_by('-amount')
-        list_amounts = User.objects.all().filter(room=user.room).exclude(userType__name='Banquero').values_list('amount',flat=True).order_by('-amount')
+        self.queryset = User.objects.all().filter(room=user.room).exclude(userType__name='Banquero').order_by('-amount')[1:4]
+        list_amounts = User.objects.all().filter(room=user.room).exclude(userType__name='Banquero').values_list('amount',flat=True).order_by('-amount')[1:4]
+        winner = User.objects.all().filter(room=user.room).exclude(userType__name='Banquero').order_by('-amount')[0]
         serializer = UserSerializer(self.queryset, many=True)
         data={
+            'winner' : {
+                'username': winner.username,
+                'amount': winner.amount,
+                'avatar': winner.avatar
+            },
             'users':serializer.data,
             'amounts':list_amounts,
             'info': 'Partida finalizada.'
