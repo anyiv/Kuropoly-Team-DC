@@ -5,7 +5,7 @@ djangorestframework==3.12.2
 Pillow==8.2.0
 pytz==2021.1
 shortuuid==1.0.1
-sqlparse==0.4.1
+sqlparse==0.4.2
 channels
 channels-redis
 django-cors-headers
